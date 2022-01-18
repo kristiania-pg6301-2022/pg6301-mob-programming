@@ -28,14 +28,14 @@ function FrontPage() {
     </div>
 }
 
-function ListMovies() {
+function ListMovies({movies}) {
     return <div><h1>List movies</h1>
 
             {movies.map(m =>
-                <>
+                <div key={m.title}>
                 <h2>{m.title} ({m.year})</h2>
                 <div>{m.plot}</div>
-                </>
+                </div>
             )}
 
 
@@ -49,7 +49,7 @@ function Application() {
         <Routes>
             <Route path={"/"} element={<FrontPage/>}/>
             <Route path={"/movies/new"} element={<h1>New movie</h1>}/>
-            <Route path={"/movies"} element={<ListMovies/>}/>
+            <Route path={"/movies"} element={<ListMovies movies={movies}/>}/>
         </Routes>
     </BrowserRouter>
 }
