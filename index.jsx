@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom"
 import React, {useState} from "react";
 import {BrowserRouter, Link, Routes, Route, useNavigate} from "react-router-dom";
-import{randomQuestion} from "./questions-1";
+import {isCorrectAnswer, randomQuestion} from "./questions-1";
 
 function FrontPage() {
     return <div>
@@ -23,7 +23,11 @@ function Quiz() {
 
         {answers.map( (answer)  =>{
             return <button key={answer} onClick={ () => {
+                if(isCorrectAnswer(q,answer )){
+                    navigate("/answer/right")
+                } else{
                 navigate("/answer/wrong")
+              }
             }
             }>{q.answers[answer]}</button>
         })}
@@ -32,10 +36,13 @@ function Quiz() {
 
 function Answer() {
     return <div>
-        <h1> the answer was wrong</h1>
+        <Routes>
+                <Route path={"/wrong"} element={<h1>Wrong!!</h1>}></Route>
+                <Route path={"/right"} element={<h1>Right!!</h1>}></Route>
+        </Routes>
         <Link to={"/Question"}>
             Try another question
-      </Link>
+         </Link>
     </div>
 }
 
