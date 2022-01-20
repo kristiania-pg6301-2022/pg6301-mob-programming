@@ -11,7 +11,7 @@ function FrontPage() {
 
 }
 
-function Quiz() {
+function Quiz( {setCorrectAnswers, setQuestionsAnswered}) {
     const navigate = useNavigate();
 
     const q  = randomQuestion();
@@ -23,8 +23,10 @@ function Quiz() {
 
         {answers.map( (answer)  =>{
             return <button key={answer} onClick={ () => {
+                setQuestionsAnswered( v => v+1)
                 if(isCorrectAnswer(q,answer )){
                     navigate("/answer/right")
+                    setCorrectAnswers( v=> v+1)
                 } else{
                 navigate("/answer/wrong")
               }
@@ -34,12 +36,15 @@ function Quiz() {
     </div>
 }
 
-function Answer() {
+function Answer({ correctAnswers, questionsAnswered}) {
     return <div>
         <Routes>
                 <Route path={"/wrong"} element={<h1>Wrong!!</h1>}></Route>
                 <Route path={"/right"} element={<h1>Right!!</h1>}></Route>
         </Routes>
+        <div>
+            you have {correctAnswers} correct answers out of {questionsAnswered}
+        </div>
         <Link to={"/Question"}>
             Try another question
          </Link>
@@ -47,11 +52,15 @@ function Answer() {
 }
 
 function App() {
+
+    const [ questionsAnswered, setQuestionsAnswered] = useState(0);
+    const [ correctAnswers, setCorrectAnswers] = useState(0);
+
     return <BrowserRouter>
         <Routes>
             <Route path="/" element={<FrontPage/>}></Route>
-            <Route path={"/Question"} element={<Quiz/>}> </Route>
-            <Route path={"/answer/*"} element={<Answer/>}></Route>
+            <Route path={"/Question"} element={<Quiz setQuestionsAnswered={setQuestionsAnswered} setCorrectAnswers={setCorrectAnswers}/>} > </Route>
+            <Route path={"/answer/*"} element={<Answer questionsAnswered={questionsAnswered} correctAnswers={correctAnswers} />}></Route>
         </Routes>
     </BrowserRouter>
 }
