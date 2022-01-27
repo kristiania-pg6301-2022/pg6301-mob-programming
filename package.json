@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "dev": "parcel index.html",
-    "test": "jest"
+    "test": "jest",
+    "format": "prettier --write *.{ts,tsx,js,jsx} __tests__/**/*.{ts,tsx,js,jsx}",
+    "format:check": "prettier --check *.{ts,tsx,js,jsx} __tests__/**/*.{ts,tsx,js,jsx}",
+    "lint": "eslint **/*.{ts,tsx,js,jsx}",
+    "verify": "npm run format:check && npm run test:coverage",
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -19,12 +24,25 @@
   },
   "homepage": "https://github.com/kristiania-pg6301-2022/pg6301-mob-programming#readme",
   "devDependencies": {
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "babel-jest": "^27.4.6",
     "jest": "^27.4.7",
-    "parcel": "^2.2.1"
+    "parcel": "^2.2.1",
+    "prettier": "^2.5.1"
   },
   "dependencies": {
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.2.1"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-react",
+      "@babel/preset-env"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
   }
 }

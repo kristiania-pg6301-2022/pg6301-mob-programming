@@ -1,5 +1,11 @@
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { Question } from "../question";
+
 describe("Quiz Application", () => {
-    it("shows quiz", () => {
-        expect(4).toEqual(4)
-    })
-})
+  it("shows quiz", () => {
+    const element = document.createElement("div");
+    ReactDOM.render(<Question />, element);
+    expect(element.innerHTML).toMatchSnapshot();
+  });
+});
