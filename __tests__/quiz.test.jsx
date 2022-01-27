@@ -1,6 +1,14 @@
+import * as React from "react";
+import * as ReactDOM from 'react-dom';
+
+function Question() {
+    return <h1>Here is a question</h1>;
+}
 
 describe("Quiz Application", () => {
     it("shows quiz", () => {
-        expect(4).toEqual(4)
+        const element = document.createElement("div")
+        ReactDOM.render(<Question />, element)
+        expect(element.innerHTML).toMatchSnapshot()
     })
 })
