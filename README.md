@@ -1,2 +1,0 @@
-[![Coverage Status](https://coveralls.io/repos/github/kristiania-pg6301-2022/pg6301-mob-programming/badge.svg?branch=exerize_3)](https://coveralls.io/github/kristiania-pg6301-2022/pg6301-mob-programming?branch=exerize_3)
-[![Run tests](https://github.com/kristiania-pg6301-2022/pg6301-mob-programming/actions/workflows/tests.yml/badge.svg)](https://github.com/kristiania-pg6301-2022/pg6301-mob-programming/actions/workflows/tests.yml)
