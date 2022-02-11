@@ -1,0 +1,13 @@
+GET {{server}}/question/random
+
+###
+POST {{server}}/question
+Content-Type: application/json
+
+{
+  "id": 976,
+  "answer": "answer_b"
+}
+
+###
+GET {{server}}/question/score
