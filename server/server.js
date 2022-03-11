@@ -9,6 +9,17 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
+async function fetchJSON(url, options){
+    const res = await fetch(url, options)
+    if (!res.ok){
+        throw new Error(`Failed ${res.status}`)
+    }
+    return await res.json()
+}
+
+
+
+
 app.use(express.static("../client/dist"));
 app.use((req, res, next) => {
     if (req.method === "GET" && !req.path.startsWith("/api")) {
