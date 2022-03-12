@@ -18,11 +18,23 @@ function FrontPage() {
         </div>);
 }
 
+async function fetchJSON(url, options){
+    const res = await fetch(url, options)
+    if (!res.ok){
+        throw new Error(`Failed ${res.status}`)
+    }
+    return await res.json()
+}
+
 function Login() {
     return null;
 }
 
 function Profile() {
+    return null;
+}
+
+function Callback() {
     return null;
 }
 
@@ -33,6 +45,7 @@ function App() {
                 <Route path={"/"} element={<FrontPage/>}/>
                 <Route path={"/login"} element={<Login/>}/>
                 <Route path={"/profile"} element={<Profile/>}/>
+                <Route path={"/login/callback"} element={<Callback/>}/>
             </Routes>
         </BrowserRouter>);
 }
