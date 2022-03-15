@@ -28,5 +28,6 @@
     "concurrently": "^7.0.0"
   },
   "dependencies": {
+    "prettier": "^2.5.1"
   }
 }
