@@ -17,7 +17,11 @@ async function fetchJSON(url, options) {
   return await res.json();
 }
 
-//
+app.post("/api/login", (req, res) => {
+  const { access_token } = req.body;
+  res.cookie("access_token", access_token, { signed: true });
+  res.sendStatus(200);
+});
 
 app.use(express.static("../client/dist"));
 app.use((req, res, next) => {
