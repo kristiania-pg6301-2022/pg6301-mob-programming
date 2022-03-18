@@ -1,6 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Link,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 
 function FrontPage() {
   return (
@@ -12,9 +18,6 @@ function FrontPage() {
 
       <div>
         <Link to={"/profile"}>Profile</Link>
-        <div>
-          <a href={"/login/callback"}>sdsd</a>
-        </div>
       </div>
     </div>
   );
@@ -52,11 +55,55 @@ function Login() {
   );
 }
 
+function useLoader(loadingFn) {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState();
+  const [error, setError] = useState();
+
+  async function load() {
+    try {
+      setLoading(true);
+      setData(await loadingFn);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(async () => await load(), []);
+
+  return { loading, data, error };
+}
+
 function Profile() {
-  return null;
+  const [obj, setObj] = useState();
+  const { loading, data, error } = useLoader(async () => {
+    return await fetchJSON("/api/login").then((json) =>
+      setObj(json.access_token)
+    );
+  });
+
+  console.log(obj);
+
+  if (loading) {
+    return <div>Please wait...</div>;
+  }
+
+  if (error) {
+    return <div>Error! {error.toString()}</div>;
+  }
+
+  return (
+    <div>
+      <h1>Profile</h1>
+      <div>{JSON.stringify(obj)}</div>
+    </div>
+  );
 }
 
 function Callback() {
+  const navigate = useNavigate();
   useEffect(async () => {
     const { access_token } = Object.fromEntries(
       new URLSearchParams(window.location.hash.substring(1))
@@ -70,11 +117,12 @@ function Callback() {
       },
       body: JSON.stringify({ access_token }),
     });
+    navigate("/");
   });
 
   return (
     <div>
-      <h1>Callback</h1>
+      <h1>Please wait...</h1>
     </div>
   );
 }

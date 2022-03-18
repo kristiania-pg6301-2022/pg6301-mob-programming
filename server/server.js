@@ -5,7 +5,9 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
 dotenv.config();
+
 const app = express();
+
 app.use(bodyParser.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
@@ -16,6 +18,11 @@ async function fetchJSON(url, options) {
   }
   return await res.json();
 }
+
+app.get("/api/login", (req, res) => {
+  const { access_token } = req.signedCookies;
+  res.json({ access_token });
+});
 
 app.post("/api/login", (req, res) => {
   const { access_token } = req.body;
