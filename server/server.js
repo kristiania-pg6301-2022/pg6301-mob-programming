@@ -3,32 +3,15 @@ import * as path from "path";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import { MoviesApi } from "./moviesApi.js";
 
 dotenv.config();
 
 const app = express();
-
 app.use(bodyParser.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-async function fetchJSON(url, options) {
-  const res = await fetch(url, options);
-  if (!res.ok) {
-    throw new Error(`Failed ${res.status}`);
-  }
-  return await res.json();
-}
-
-app.get("/api/login", (req, res) => {
-  const { access_token } = req.signedCookies;
-  res.json({ access_token });
-});
-
-app.post("/api/login", (req, res) => {
-  const { access_token } = req.body;
-  res.cookie("access_token", access_token, { signed: true });
-  res.sendStatus(200);
-});
+app.use("/api/movies", MoviesApi());
 
 app.use(express.static("../client/dist"));
 app.use((req, res, next) => {

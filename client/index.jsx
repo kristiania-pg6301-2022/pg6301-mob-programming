@@ -55,7 +55,7 @@ function AddMovie() {
 
 function ListMovies() {
   const { loading, error, data } = useLoader(async () =>
-    fetchJSON("api/movies")
+    fetchJSON("/api/movies")
   );
 
   if (loading) {
