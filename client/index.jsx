@@ -7,6 +7,7 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
+import { raw } from "concurrently/dist/src/defaults";
 
 function FrontPage() {
   return (
@@ -71,20 +72,23 @@ function useLoader(loadingFn) {
     }
   }
 
-  useEffect(async () => await load(), []);
+  useEffect(() => load(), []);
 
   return { loading, data, error };
 }
 
 function Profile() {
-  const [obj, setObj] = useState();
-  const { loading, data, error } = useLoader(async () => {
-    return await fetchJSON("/api/login").then((json) =>
-      setObj(json.access_token)
-    );
-  });
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [image, setImage] = useState();
 
-  console.log(obj);
+  const { loading, data, error } = useLoader(async () => {
+    return await fetchJSON("/api/login").then((json) => {
+      setName(json.userinfo.name);
+      setEmail(json.userinfo.email);
+      setImage(json.userinfo.picture);
+    });
+  });
 
   if (loading) {
     return <div>Please wait...</div>;
@@ -96,8 +100,12 @@ function Profile() {
 
   return (
     <div>
-      <h1>Profile</h1>
-      <div>{JSON.stringify(obj)}</div>
+      <h1>
+        Profile for {name} with Email: ({email})
+      </h1>
+      <div>
+        <img src={image} alt="picture" />
+      </div>
     </div>
   );
 }

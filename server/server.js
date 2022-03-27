@@ -3,6 +3,7 @@ import * as path from "path";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import fetch from "node-fetch";
 
 dotenv.config();
 
@@ -19,9 +20,20 @@ async function fetchJSON(url, options) {
   return await res.json();
 }
 
-app.get("/api/login", (req, res) => {
+app.get("/api/login", async (req, res) => {
   const { access_token } = req.signedCookies;
-  res.json({ access_token });
+
+  const { userinfo_endpoint } = await fetchJSON(
+    "https://accounts.google.com/.well-known/openid-configuration"
+  );
+
+  const userinfo = await fetchJSON(userinfo_endpoint, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+
+  res.json({ userinfo });
 });
 
 app.post("/api/login", (req, res) => {
