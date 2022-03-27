@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { MoviesApi } from "./moviesApi.js";
+import { MongoClient } from "mongodb";
 
 dotenv.config();
 
@@ -11,7 +12,13 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-app.use("/api/movies", MoviesApi());
+const client = new MongoClient(process.env.ATLAS_URL);
+client.connect().then(async () => {
+  app.use(
+    "/api/movies",
+    MoviesApi(client.db(process.env.ATLAS_DATABASE || "test"))
+  );
+});
 
 app.use(express.static("../client/dist"));
 app.use((req, res, next) => {

@@ -53,6 +53,21 @@ function AddMovie() {
   );
 }
 
+function MovieCard({
+  movie: { title, year, fullplot, poster, countries, directors },
+}) {
+  return (
+    <div>
+      <h3>{title}</h3>
+      <p>{year}</p>
+      {poster && <img src={poster} width={100} alt="poster" />}
+      <p>{`${countries}`}</p>
+      <div>{fullplot}</div>
+      <h4>Directors: {directors}</h4>
+    </div>
+  );
+}
+
 function ListMovies() {
   const { loading, error, data } = useLoader(async () =>
     fetchJSON("/api/movies")
@@ -73,7 +88,7 @@ function ListMovies() {
     <div>
       <h1>List of Movies</h1>
       {data.map((movie) => (
-        <div key={movie.title}>{movie.title}</div>
+        <MovieCard key={movie.title} movie={movie} />
       ))}
     </div>
   );
