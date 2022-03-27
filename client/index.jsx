@@ -7,17 +7,18 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
+import { useLoader } from "./useLoader";
 
 function FrontPage() {
   return (
     <div>
-      <h1>FrontPage</h1>
+      <h1>Movie Database 7</h1>
       <div>
-        <Link to={"/login"}>Log in</Link>
+        <Link to={"/movies/list"}>List Movies</Link>
       </div>
 
       <div>
-        <Link to={"/profile"}>Profile</Link>
+        <Link to={"/movies/addMovie"}>Add a new movie</Link>
       </div>
     </div>
   );
@@ -26,104 +27,64 @@ function FrontPage() {
 async function fetchJSON(url) {
   const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`Failed ${res.status}`);
+    throw new Error(`Failed ${res.status}: ${res.statusText}`);
   }
   return await res.json();
 }
 
-function Login() {
-  useEffect(async () => {
-    const { authorization_endpoint } = await fetchJSON(
-      "https://accounts.google.com/.well-known/openid-configuration"
-    );
-
-    const parameters = {
-      response_type: "token",
-      client_id:
-        "134548719651-0n3bfj6iktgap06pmnfqj7gmvm849pm5.apps.googleusercontent.com",
-      scope: "email profile",
-      redirect_uri: window.location.origin + "/login/callback",
-    };
-
-    window.location.href =
-      authorization_endpoint + "?" + new URLSearchParams(parameters);
-  }, []);
+function AddMovie() {
   return (
-    <div>
-      <h1>Please wait....</h1>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <h1>Add a new movie</h1>
+      {/* <div>
+          Title:
+          <input value={} onChange={}/>
+        </div>
+        <div>
+          Year:
+          <input value={} onChange={}/>
+        </div>
+        <div>
+          Plot:
+          <textarea value={} onChange={}/>
+        </div>*/}
+      <button>Submit</button>
+    </form>
   );
 }
 
-function useLoader(loadingFn) {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState();
-  const [error, setError] = useState();
-
-  async function load() {
-    try {
-      setLoading(true);
-      setData(await loadingFn);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(async () => await load(), []);
-
-  return { loading, data, error };
-}
-
-function Profile() {
-  const [obj, setObj] = useState();
-  const { loading, data, error } = useLoader(async () => {
-    return await fetchJSON("/api/login").then((json) =>
-      setObj(json.access_token)
-    );
-  });
-
-  console.log(obj);
+function ListMovies() {
+  const { loading, error, data } = useLoader(async () =>
+    fetchJSON("api/movies")
+  );
 
   if (loading) {
-    return <div>Please wait...</div>;
+    return <div>Loading...</div>;
   }
-
   if (error) {
-    return <div>Error! {error.toString()}</div>;
+    return (
+      <div>
+        <h1>Error</h1>
+        <div>{error.toString()}</div>
+      </div>
+    );
   }
-
   return (
     <div>
-      <h1>Profile</h1>
-      <div>{JSON.stringify(obj)}</div>
+      <h1>List of Movies</h1>
+      {data.map((movie) => (
+        <div key={movie.title}>{movie.title}</div>
+      ))}
     </div>
   );
 }
 
-function Callback() {
-  const navigate = useNavigate();
-  useEffect(async () => {
-    const { access_token } = Object.fromEntries(
-      new URLSearchParams(window.location.hash.substring(1))
-    );
-    console.log(access_token);
-
-    await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ access_token }),
-    });
-    navigate("/");
-  });
-
+function Movies() {
   return (
-    <div>
-      <h1>Please wait...</h1>
-    </div>
+    <Routes>
+      <Route path={"/list"} element={<ListMovies />} />
+      <Route path={"/addMovie"} element={<AddMovie />} />
+    </Routes>
   );
 }
 
@@ -132,9 +93,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path={"/"} element={<FrontPage />} />
-        <Route path={"/login"} element={<Login />} />
-        <Route path={"/login/callback"} element={<Callback />} />
-        <Route path={"/profile"} element={<Profile />} />
+        <Route path={"/movies/*"} element={<Movies />} />
       </Routes>
     </BrowserRouter>
   );
