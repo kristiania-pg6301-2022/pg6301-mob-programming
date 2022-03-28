@@ -34,8 +34,13 @@ export function MoviesApi(atlasDatabase) {
     const { title, year, fullplot, poster, countries, directors } = req.body;
     atlasDatabase.collection("movies").insertOne({
       title,
+      year,
+      fullplot,
+      poster,
+      countries,
+      directors,
     });
-    res.sendStatus(500);
+    res.sendStatus(200);
   });
 
   return Movies;

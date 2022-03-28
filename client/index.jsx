@@ -8,6 +8,8 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { useLoader } from "./useLoader";
+import { FormInput } from "./FormInput";
+import { FormText } from "./FormText";
 
 function FrontPage() {
   return (
@@ -32,22 +34,50 @@ async function fetchJSON(url) {
   return await res.json();
 }
 
+async function postJSON(url, body) {
+  const res = await fetch(url, {
+    method: "post",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    throw new Error(`${res.status}: ${res.statusText}`);
+  }
+}
+
 function AddMovie() {
+  const [title, setTitle] = useState("");
+  const [year, setYear] = useState("");
+  const [director, setDirector] = useState("");
+  const [fullplot, setFullplot] = useState("");
+  const [country, setCountry] = useState("");
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    await postJSON("/api/movies/new", {
+      title,
+      year: parseInt(year),
+      directors: [director],
+      fullplot,
+      countries: [country],
+    });
+    setCountry("");
+    setDirector("");
+    setYear("");
+    setFullplot("");
+    setTitle("");
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <h1>Add a new movie</h1>
-      {/* <div>
-          Title:
-          <input value={} onChange={}/>
-        </div>
-        <div>
-          Year:
-          <input value={} onChange={}/>
-        </div>
-        <div>
-          Plot:
-          <textarea value={} onChange={}/>
-        </div>*/}
+      <FormInput label={"Title"} value={title} setValue={setTitle} />
+      <FormInput label={"Year"} value={year} setValue={setYear} />
+      <FormInput label={"Director"} value={director} setValue={setDirector} />
+      <FormInput label={"Country"} value={country} setValue={setCountry} />
+      <FormText label={"Full plot"} value={fullplot} setValue={setFullplot} />
       <button>Submit</button>
     </form>
   );
@@ -61,9 +91,9 @@ function MovieCard({
       <h3>{title}</h3>
       <p>{year}</p>
       {poster && <img src={poster} width={100} alt="poster" />}
-      <p>{`${countries}`}</p>
+      <p>{countries.join(", ")}</p>
       <div>{fullplot}</div>
-      <h4>Directors: {directors}</h4>
+      <h4>Directors: {directors.join(", ")}</h4>
     </div>
   );
 }
