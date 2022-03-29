@@ -71,7 +71,7 @@ function ChatApp({ username }) {
   const [message, setMessage] = useState("");
   function handleMessage(e) {
     e.preventDefault();
-    setLog([...log, { author: username, message }]);
+    ws.send(JSON.stringify({ author: username, message }));
     setMessage("");
   }
 
