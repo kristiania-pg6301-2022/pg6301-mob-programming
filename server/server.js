@@ -11,11 +11,16 @@ dotenv.config();
 const app = express();
 
 const wsServer = new WebSocketServer({ noServer: true });
+
+const sockets = [];
 wsServer.on("connect", (socket) => {
+  sockets.push(socket);
   socket.send(JSON.stringify({ author: "j", message: "h" }));
   socket.on("message", (msg) => {
     const { author, message } = JSON.parse(msg);
-    socket.send(JSON.stringify({ author, message }));
+    for (const recipient of sockets) {
+      socket.send(JSON.stringify({ author, message }));
+    }
   });
 });
 

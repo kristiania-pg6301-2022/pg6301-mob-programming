@@ -1,14 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import "./styles.css";
-import {
-  BrowserRouter,
-  Link,
-  Route,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
-import { raw } from "concurrently/dist/src/defaults";
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState("");
@@ -35,14 +27,6 @@ function Login({ onLogin }) {
   );
 }
 
-async function fetchJSON(url) {
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed ${res.status}`);
-  }
-  return await res.json();
-}
-
 function ChatMsg({ msg: { author, message } }) {
   return (
     <div>
@@ -55,23 +39,21 @@ function ChatMsg({ msg: { author, message } }) {
 function ChatApp({ username }) {
   const [ws, setWs] = useState();
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3000");
+    const ws = new WebSocket(window.location.origin.replace(/^http/, "ws"));
     ws.onmessage = (e) => {
       const { author, message } = JSON.parse(e.data);
-      setLog([...log, { author, message }]);
+      setLog((oldMsg) => [...oldMsg, { author, message }]);
     };
     setWs(ws);
   }, []);
-  const [log, setLog] = useState([
-    {
-      author: "j",
-      message: "fgd",
-    },
-  ]);
+
+  const [log, setLog] = useState([]);
   const [message, setMessage] = useState("");
+
   function handleMessage(e) {
     e.preventDefault();
-    ws.send(JSON.stringify({ author: username, message }));
+    const chatMsg = { author: username, message };
+    ws.send(JSON.stringify(chatMsg));
     setMessage("");
   }
 
