@@ -1,0 +1,28 @@
+body{
+    margin: 0;
+}
+
+.app{
+background-color: darkturquoise;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+header{
+    background-color: darkcyan;
+}
+
+footer{
+    background-color: darkcyan;
+}
+
+footer form {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+footer input{
+    flex: 1;
+}

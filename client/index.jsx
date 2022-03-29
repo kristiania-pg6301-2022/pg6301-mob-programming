@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import "./styles.css";
 import {
   BrowserRouter,
   Link,
@@ -42,6 +43,49 @@ async function fetchJSON(url) {
   return await res.json();
 }
 
+function ChatMsg({ msg: { author, message } }) {
+  return (
+    <div>
+      <strong>{author}: </strong>
+      {message}
+    </div>
+  );
+}
+
+function ChatApp({ username }) {
+  const [log, setLog] = useState([
+    {
+      author: "j",
+      message: "fgd",
+    },
+  ]);
+  const [message, setMessage] = useState("");
+  function handleMessage(e) {
+    e.preventDefault();
+    setLog([...log, { author: username, message }]);
+    setMessage("");
+  }
+
+  return (
+    <div className={"app"}>
+      <header>
+        Chat exercise 8: <strong>{username}</strong>
+      </header>
+      <main>
+        {log.map((msg, index) => (
+          <ChatMsg key={index} msg={msg} />
+        ))}
+      </main>
+      <footer>
+        <form onSubmit={handleMessage}>
+          <input value={message} onChange={(e) => setMessage(e.target.value)} />
+          <button>Send</button>
+        </form>
+      </footer>
+    </div>
+  );
+}
+
 function App() {
   const [username, setUsername] = useState();
 
@@ -49,7 +93,7 @@ function App() {
     return <Login onLogin={(user) => setUsername(user)} />;
   }
 
-  return <div>Hello {username}</div>;
+  return <ChatApp username={username} />;
 }
 
 ReactDOM.render(<App />, document.getElementById("app"));
