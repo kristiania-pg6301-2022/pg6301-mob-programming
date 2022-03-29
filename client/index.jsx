@@ -53,6 +53,15 @@ function ChatMsg({ msg: { author, message } }) {
 }
 
 function ChatApp({ username }) {
+  const [ws, setWs] = useState();
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:3000");
+    ws.onmessage = (e) => {
+      const { author, message } = JSON.parse(e.data);
+      setLog([...log, { author, message }]);
+    };
+    setWs(ws);
+  }, []);
   const [log, setLog] = useState([
     {
       author: "j",
