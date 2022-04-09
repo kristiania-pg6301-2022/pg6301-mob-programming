@@ -4,7 +4,7 @@
   "description": "[![Coverage Status](https://coveralls.io/repos/github/kristiania-pg6301-2022/pg6301-mob-programming/badge.svg?branch=exerize_3)](https://coveralls.io/github/kristiania-pg6301-2022/pg6301-mob-programming?branch=exerize_3)\r [![Run tests](https://github.com/kristiania-pg6301-2022/pg6301-mob-programming/actions/workflows/tests.yml/badge.svg)](https://github.com/kristiania-pg6301-2022/pg6301-mob-programming/actions/workflows/tests.yml)",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test:client && npm run test:sercer",
+    "test": "npm run test:client && npm run test:server",
     "test:client": "cd client && npm test",
     "test:server": "cd server && npm test",
     "dev": "concurrently npm:dev:server npm:dev:client",
