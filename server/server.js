@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 const client = new MongoClient(process.env.ATLAS_URL);
+
 client.connect().then(async () => {
   app.use(
     "/api/movies",
