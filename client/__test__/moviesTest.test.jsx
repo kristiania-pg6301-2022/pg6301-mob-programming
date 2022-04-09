@@ -24,4 +24,21 @@ describe("ListMovies test", () => {
       Array.from(dom.querySelectorAll("h3")).map((e) => e.innerHTML)
     ).toEqual(["film 1", "film 2"]);
   });
+
+  it("should show error", async function () {
+    const dom = document.createElement("div");
+    await act(async () => {
+      ReactDOM.render(
+        <ListMovies
+          getMovies={() => {
+            throw new Error("Something is not right 🤔");
+          }}
+        />,
+        dom
+      );
+    });
+    expect(dom.querySelector("#error-msg").innerHTML).toEqual(
+      "Error: Something is not right 🤔"
+    );
+  });
 });

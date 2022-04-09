@@ -12,7 +12,7 @@ export function ListMovies({ getMovies }) {
     return (
       <div>
         <h1>Error</h1>
-        <div>{error.toString()}</div>
+        <div id={"error-msg"}>{error.toString()}</div>
       </div>
     );
   }
