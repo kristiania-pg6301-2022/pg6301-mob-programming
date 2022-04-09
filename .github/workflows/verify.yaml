@@ -21,4 +21,4 @@ jobs:
       - name: Collect Coverage from Client
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
-          working-directory: Client
+          working-directory: client
