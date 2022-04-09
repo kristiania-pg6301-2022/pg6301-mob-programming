@@ -1,17 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import {
-  BrowserRouter,
-  Link,
-  Route,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
-import { useLoader } from "./useLoader";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { FormInput } from "./FormInput";
 import { FormText } from "./FormText";
+import { ListMovies } from "./listMovies";
 
-function FrontPage() {
+export function FrontPage() {
   return (
     <div>
       <h1>Movie Database 7</h1>
@@ -83,57 +77,19 @@ function AddMovie() {
   );
 }
 
-function MovieCard({
-  movie: { title, year, fullplot, poster, countries, directors },
-}) {
-  return (
-    <div>
-      <h3>{title}</h3>
-      <p>{year}</p>
-      {poster && <img src={poster} width={100} alt="poster" />}
-      <p>{countries.join(", ")}</p>
-      <div>{fullplot}</div>
-      <h4>Directors: {directors.join(", ")}</h4>
-    </div>
-  );
-}
-
-function ListMovies() {
-  const { loading, error, data } = useLoader(async () =>
-    fetchJSON("/api/movies")
-  );
-
-  if (loading) {
-    return <div>Loading...</div>;
+export function Movies() {
+  async function getMovies() {
+    return await fetchJSON("/api/movies");
   }
-  if (error) {
-    return (
-      <div>
-        <h1>Error</h1>
-        <div>{error.toString()}</div>
-      </div>
-    );
-  }
-  return (
-    <div>
-      <h1>List of Movies</h1>
-      {data.map((movie) => (
-        <MovieCard key={movie.title} movie={movie} />
-      ))}
-    </div>
-  );
-}
 
-function Movies() {
   return (
     <Routes>
-      <Route path={"/list"} element={<ListMovies />} />
+      <Route path={"/list"} element={<ListMovies getMovies={getMovies} />} />
       <Route path={"/addMovie"} element={<AddMovie />} />
     </Routes>
   );
 }
-
-function App() {
+export function App() {
   return (
     <BrowserRouter>
       <Routes>
