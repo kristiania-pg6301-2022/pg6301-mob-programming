@@ -1,25 +1,49 @@
 import request from "supertest";
 import express from "express";
 import { MongoClient } from "mongodb";
-import { MoviesApi } from "../moviesApi.js";
+import { MoviesApi } from "../moviesApi";
 import dotenv from "dotenv";
+import bodyParser from "body-parser";
 
 dotenv.config();
 
 const app = express();
+app.use(bodyParser.json());
+
+const mongoClient = new MongoClient(process.env.ATLAS_URL);
 
 beforeAll(async () => {
-  const mongoClient = new MongoClient(process.env.ATLAS_URL);
   await mongoClient.connect();
-  app.use("/api/movies", MoviesApi(mongoClient.db("sample_mflix")));
+  const database = mongoClient.db("test_database");
+  await database.collection("movies").deleteMany({});
+  app.use("/api/movies", MoviesApi(database));
 });
-
-describe("Api for movies", () => {
-  it("should list existing movies", async function () {
+afterAll(() => {
+  mongoClient.close();
+});
+describe("movies api", () => {
+  it("adds a new movie", async () => {
+    await request(app)
+      .post("/api/movies/new")
+      .send({
+        title: "My Test Movie",
+        country: "Ukraine",
+        year: 2020,
+      })
+      .expect(200);
     expect(
       (await request(app).get("/api/movies").expect(200)).body.map(
         ({ title }) => title
       )
-    ).toContain("My Joy");
+    ).toContain("My Test Movie");
   });
+
+  /*
+  it("lists existing movies", async () => {
+    expect(
+      (await request(app).get("/api/movies").expect(200)).body.map(
+        ({ title }) => title
+      )
+    ).toContain("Maidan");
+  });*/
 });

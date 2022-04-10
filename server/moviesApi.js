@@ -31,13 +31,13 @@ export function MoviesApi(atlasDatabase) {
   });
 
   Movies.post("/new", (req, res) => {
-    const { title, year, fullplot, poster, countries, directors } = req.body;
+    const { title, year, fullplot, country, poster, directors } = req.body;
     atlasDatabase.collection("movies").insertOne({
       title,
       year,
       fullplot,
       poster,
-      countries,
+      countries: [country],
       directors,
     });
     res.sendStatus(200);
