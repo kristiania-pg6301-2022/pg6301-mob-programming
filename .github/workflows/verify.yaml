@@ -18,7 +18,7 @@ jobs:
         run: npm ci
       - run: npm test
         env:
-          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          MONGODB_URL: ${{ secrets.ATLAS_URL }}
       - name: Collect coverage for client
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
@@ -28,4 +28,4 @@ jobs:
         with:
           working-directory: server
         env:
-          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          MONGODB_URL: ${{ secrets.ATLAS_URL }}
