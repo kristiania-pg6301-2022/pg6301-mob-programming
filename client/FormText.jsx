@@ -1,3 +1,5 @@
+import React from "react";
+
 export function FormText({ label, value, setValue }) {
   return (
     <div>
