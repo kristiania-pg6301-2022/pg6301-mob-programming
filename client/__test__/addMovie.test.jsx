@@ -7,6 +7,7 @@ describe("Add Movie Tests", () => {
   it("should show movie form", function () {
     const element = document.createElement("div");
     ReactDOM.render(<AddMovie />, element);
+
     expect(element.innerHTML).toMatchSnapshot();
     expect(
       Array.from(element.querySelectorAll("form label")).map((e) => e.innerHTML)
