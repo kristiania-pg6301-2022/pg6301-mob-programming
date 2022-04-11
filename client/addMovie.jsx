@@ -15,7 +15,7 @@ export async function postJSON(url, body) {
   }
 }
 
-export function AddMovie() {
+export function AddMovie({ submitFn }) {
   const [title, setTitle] = useState("");
   const [year, setYear] = useState("");
   const [director, setDirector] = useState("");
@@ -24,6 +24,7 @@ export function AddMovie() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    await submitFn({ title });
     await postJSON("/api/movies/new", {
       title,
       year: parseInt(year),
