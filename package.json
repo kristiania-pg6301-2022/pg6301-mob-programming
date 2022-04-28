@@ -1,0 +1,45 @@
+{
+  "name": "pg6301-mob-programming",
+  "version": "1.0.0",
+  "description": "Mock exam for PG6301 Web Development and API design, 2022\r =========================================================",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:client && npm run test:server",
+    "test:coverage": "npm run test:client:coverage && npm run test:server:coverage",
+    "test:client": "cd client && npm test",
+    "test:client:coverage": "cd client && npm test -- --collectCoverage",
+    "test:server": "cd server && npm test",
+    "test:server:coverage": "cd server && npm test -- --collectCoverage",
+    "build": "npm run build:server && npm run build:client",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "dev": "concurrently npm:dev:client npm:dev:server",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "start": "cd server && npm start",
+    "postinstall": "npm run install:client && npm run install:server",
+    "install:client": "cd client && npm install --include=dev",
+    "install:server": "cd server && npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kristiania-pg6301-2022/pg6301-mob-programming.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kristiania-pg6301-2022/pg6301-mob-programming/issues"
+  },
+  "homepage": "https://github.com/kristiania-pg6301-2022/pg6301-mob-programming#readme",
+  "devDependencies": {
+    "concurrently": "^7.1.0"
+  },
+  "dependencies": {
+    "@parcel/transformer-react-refresh-wrap": "^2.5.0",
+    "prettier": "^2.6.2",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-router-dom": "^6.3.0"
+  }
+}
