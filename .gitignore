@@ -1,5 +1,0 @@
-/.idea/
-node_modules/
-.parcel-cache/
-dist/
-/server/.env
