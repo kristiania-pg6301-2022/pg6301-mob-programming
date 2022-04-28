@@ -7,7 +7,6 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
-import { raw } from "concurrently/dist/src/defaults";
 
 const ProfileContext = React.createContext({
   userinfo: undefined,
@@ -135,23 +134,43 @@ function Profile() {
 }
 
 function Callback({ reload }) {
+  const [error, setError] = useState();
   const navigate = useNavigate();
   useEffect(async () => {
-    const { access_token } = Object.fromEntries(
+    const { access_token, error, error_description } = Object.fromEntries(
       new URLSearchParams(window.location.hash.substring(1))
     );
-    console.log(access_token);
 
-    await fetch("/api/login", {
+    if (error || error_description) {
+      setError(`Error: ${error} & ${error_description}`);
+      return;
+    }
+    if (!access_token) {
+      setError("Missing Access Token");
+    }
+
+    console.log(access_token);
+    const res = await fetch("/api/login", {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify({ access_token }),
     });
-    reload();
-    navigate("/");
+    if (res.ok) {
+    } else {
+      setError(`Failed POST "/api/login": ${res.status} ${res.statusText}`);
+    }
   });
+
+  if (error) {
+    return (
+      <div>
+        <h1>Error</h1>
+        <div>{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div>

@@ -8,9 +8,10 @@ import fetch from "node-fetch";
 dotenv.config();
 
 const oauth_config = {
-  discovery_url: "https://accounts.google.com/.well-known/openid-configuration",
-  client_id: process.env.CLIENT_ID,
-  scope: "openid email profile",
+  discovery_endpoint:
+    "https://login.microsoftonline.com/organizations/v2.0/.well-known/openid-configuration",
+  client_id: process.env.CLIENT_ID_AZURE,
+  scope: "openid",
 };
 
 const app = express();
@@ -28,21 +29,22 @@ async function fetchJSON(url, options) {
 
 app.get("/api/login", async (req, res) => {
   const { access_token } = req.signedCookies;
-  const document = await fetchJSON(oauth_config.discovery_url);
+  const document = await fetchJSON(oauth_config.discovery_endpoint);
   const { userinfo_endpoint } = document;
-  let userinfo = undefined;
 
-  try {
-    userinfo = await fetchJSON(userinfo_endpoint, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-  } catch (error) {
-    console.error({ error });
+  const userinfo = await fetch(userinfo_endpoint, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+  if (userinfo.status === 401) {
+    return res.sendStatus(401);
+  } else if (userinfo.ok) {
+    res.json(await userinfo.json());
+  } else {
+    console.error(`Failed: ${userinfo.status} ${userinfo.statusText}`);
+    return res.sendStatus(500);
   }
-
-  res.json({ userinfo, oauth_config }).status(200);
 });
 
 app.delete("/api/login", (req, res) => {
