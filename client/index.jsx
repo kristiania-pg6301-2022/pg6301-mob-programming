@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { ListMovies } from "./listMovies";
 import { AddMovie } from "./addMovie";
+import { fetchJSON } from "./HTTPcalls";
 
 export function FrontPage() {
   return (
@@ -19,14 +20,6 @@ export function FrontPage() {
   );
 }
 
-async function fetchJSON(url) {
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed ${res.status}: ${res.statusText}`);
-  }
-  return await res.json();
-}
-
 export function Movies() {
   async function getMovies() {
     return await fetchJSON("/api/movies");
@@ -39,6 +32,7 @@ export function Movies() {
     </Routes>
   );
 }
+
 export function App() {
   return (
     <BrowserRouter>

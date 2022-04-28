@@ -1,49 +1,40 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FormInput } from "./FormInput";
 import { FormText } from "./FormText";
+import { postJSON } from "./HTTPcalls";
+import { useNavigate } from "react-router-dom";
+import { MovieApiContext } from "./movieApiContext";
 
-export async function postJSON(url, body) {
-  const res = await fetch(url, {
-    method: "post",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) {
-    throw new Error(`${res.status}: ${res.statusText}`);
-  }
-}
+export function AddMovie() {
+  const { addMovie } = useContext(MovieApiContext);
+  const navigate = useNavigate();
 
-export function AddMovie({ submitFn }) {
   const [title, setTitle] = useState("");
-  const [year, setYear] = useState("");
+  const [yearIn, setYearIn] = useState("");
   const [director, setDirector] = useState("");
   const [fullplot, setFullplot] = useState("");
   const [country, setCountry] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await submitFn({ title });
-    await postJSON("/api/movies/new", {
-      title,
-      year: parseInt(year),
-      directors: [director],
-      fullplot,
-      countries: [country],
-    });
-    setCountry("");
-    setDirector("");
-    setYear("");
-    setFullplot("");
-    setTitle("");
+    const year = parseInt(yearIn);
+    await addMovie({ title, year, director, country, fullplot });
+    /* await submitFn({ title });
+       await postJSON("/api/movies/new", {
+         title,
+         year: parseInt(year),
+         directors: [director],
+         fullplot,
+         countries: [country],
+       });*/
+    navigate("/");
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <h1>Add a new movie</h1>
       <FormInput label={"Title"} value={title} setValue={setTitle} />
-      <FormInput label={"Year"} value={year} setValue={setYear} />
+      <FormInput id={"yr"} label={"Year"} value={yearIn} setValue={setYearIn} />
       <FormInput label={"Director"} value={director} setValue={setDirector} />
       <FormInput label={"Country"} value={country} setValue={setCountry} />
       <FormText label={"Full plot"} value={fullplot} setValue={setFullplot} />

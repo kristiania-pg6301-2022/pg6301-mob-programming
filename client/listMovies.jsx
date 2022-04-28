@@ -1,12 +1,15 @@
 import { useLoader } from "./useLoader";
-import React from "react";
+import React, { useContext } from "react";
 import { MovieCard } from "./movieCard";
+import { MovieApiContext } from "./movieApiContext";
 
-export function ListMovies({ getMovies }) {
-  const { loading, error, data } = useLoader(getMovies);
+export function ListMovies() {
+  const { listMovies } = useContext(MovieApiContext);
+
+  const { loading, error, data } = useLoader(async () => listMovies());
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="loading">Loading...</div>;
   }
   if (error) {
     return (
