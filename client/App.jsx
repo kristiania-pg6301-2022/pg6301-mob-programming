@@ -1,25 +1,42 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import React, { useContext } from "react";
+
 import FrontPage from "./pages/frontPage";
 import ChatPage from "./pages/chatPage";
 import Profile from "./pages/profile";
 import MovieLists from "./pages/movieLists";
 import AddNewMovie from "./pages/addNewMovie";
 import Login from "./pages/login";
+import { DBLoginAPIContext } from "./hooks&context/DB&LoginAPIContext";
+import { useLoader } from "./hooks&context/useLoader";
 
-export default function App() {
+export function App() {
+  const { fetchLogin } = useContext(DBLoginAPIContext);
+  const { data, error, loading, reload } = useLoader(fetchLogin);
+  console.log(data);
+
+  if (error) {
+    return <div>Error: {error.toString()}</div>;
+  }
+
+  if (loading) {
+    return <div>Please wait...</div>;
+  }
+
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route to={"/"} element={<FrontPage />} />
-          <Route to={"/login"} element={<Login />} />
-          <Route to={"/profile"} element={<Profile />} />
-          <Route to={"/chat"} element={<ChatPage />} />
-          <Route to={"/movies/"} element={<MovieLists />} />
-          <Route to={"/movies/add"} element={<AddNewMovie />} />
-          <Route to={"*"} element={<h1>Not found</h1>} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path={"/"} element={<FrontPage />} />
+        <Route
+          path={"/login/*"}
+          element={<Login config={data.config} reload={reload} />}
+        />
+        <Route path={"/profile"} element={<Profile user={data?.user} />} />
+        <Route path={"/chat"} element={<ChatPage />} />
+        <Route path={"/movies/"} element={<MovieLists />} />
+        <Route path={"/movies/add"} element={<AddNewMovie />} />
+        <Route path={"*"} element={<h1>Not found</h1>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
