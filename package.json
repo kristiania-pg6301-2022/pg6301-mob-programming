@@ -19,10 +19,7 @@
     "start": "cd server && npm start",
     "postinstall": "npm run install:client && npm run install:server",
     "install:client": "cd client && npm install --include=dev",
-    "install:server": "cd server && npm install",
-    "prepare": "husky install",
-    "format": "prettier --write **/*.{js,jsx,ts,tsx}",
-    "format:check": "prettier --check **/*.{js,jsx,ts,tsx}"
+    "install:server": "cd server && npm install"
   },
   "repository": {
     "type": "git",
