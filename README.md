@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/kristiania-pg6301-2022/pg6301-mob-programming/badge.svg?branch=master)](https://coveralls.io/github/kristiania-pg6301-2022/pg6301-mob-programming?branch=master)
+
 Mock exam for PG6301 Web Development and API design, 2022
 =========================================================
 
