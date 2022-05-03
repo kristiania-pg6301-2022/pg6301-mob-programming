@@ -30,3 +30,7 @@ jobs:
           working-directory: server
         env:
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
