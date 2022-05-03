@@ -1,6 +1,6 @@
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { FrontPage } from "./pages/frontPage";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 
 import "./application.css";
 import { LoginPage } from "./pages/loginPage";
@@ -49,7 +49,10 @@ export function App() {
       </header>
       <main>
         <Routes>
-          <Route path={"/"} element={<FrontPage />} />
+          <Route
+            path={"/"}
+            element={<FrontPage user={data?.user[provider]} />}
+          />
           <Route path={"/movies"} element={<MovieLists />} />
           <Route path={"/movies/new"} element={<AddNewMovie />} />
           <Route
