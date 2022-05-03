@@ -11,7 +11,7 @@ export default function ChatPage({ user }) {
 
   useEffect(() => {
     setUserInfo(author);
-    const ws = new WebSocket("ws://" + window.location.host);
+    const ws = new WebSocket(window.location.origin.replace(/^http/, "ws"));
     ws.onopen = (event) => {
       console.log("Opened", event);
     };
