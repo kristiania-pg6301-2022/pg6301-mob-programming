@@ -34,3 +34,4 @@ jobs:
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: hok7XKigNIJgiPAOdSuM2WOZk89bYEw0B
