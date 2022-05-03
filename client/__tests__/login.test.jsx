@@ -34,4 +34,30 @@ describe("login page", () => {
     );
     expect(params).toMatchObject({ client_id, redirect_uri });
   });
+
+  it("posts received token to server", async () => {
+    window.sessionStorage.setItem("expected_state", "test");
+    // replace window.location to simulate returning
+    const access_token = `abc`;
+    const location = new URL(
+      `https://www.example.com#access_token=${access_token}&state=test`
+    );
+    delete window.location;
+    window.location = new URL(location);
+
+    const domElement = document.createElement("div");
+    const registerLogin = jest.fn();
+    const reload = jest.fn();
+    act(() => {
+      ReactDOM.render(
+        <MemoryRouter initialEntries={["/google/callback"]}>
+          <LoginMoviesApiContext.Provider value={{ registerLogin }}>
+            <LoginPage reload={reload} />
+          </LoginMoviesApiContext.Provider>
+        </MemoryRouter>,
+        domElement
+      );
+    });
+    expect(registerLogin).toBeCalledWith("google", { access_token });
+  });
 });
