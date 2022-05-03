@@ -5,7 +5,6 @@
   "scripts": {
     "test": "jest",
     "dev": "parcel watch index.html",
-    "celan": "rimraf dist .parcel-cache",
     "build": "npm install --include=dev && parcel build index.html"
   },
   "keywords": [],
