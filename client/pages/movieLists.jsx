@@ -26,11 +26,11 @@ export default function MovieLists() {
     setCountry(countryInput);
   }
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className={"loading-indicator"}>Loading...</div>;
   }
   if (error) {
     return (
-      <div>
+      <div className={"error-message"}>
         <h1>Error</h1>
         <div>{error.toString()}</div>
       </div>

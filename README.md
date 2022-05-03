@@ -24,11 +24,11 @@ If you're smart, you construct the code of your app so that everything that has 
 
 ## Checklist of technologies you should include in your application
 
-* [ ] Logon with Active Directory
-* [ ] Jest tests
-  * [ ] Snapshot tests
-  * [ ] Simulate + jest.fn
-  * [ ] Supertest
+* [x] Logon with Active Directory
+* [x] Jest tests
+  * [x] Snapshot tests
+  * [x] Simulate + jest.fn
+  * [x] Supertest
 * [ ] Github Actions with coverage rapport
 * [ ] Deployment to Heroku
 * [ ] Mongodb

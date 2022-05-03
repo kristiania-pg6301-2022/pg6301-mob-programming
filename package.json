@@ -19,7 +19,10 @@
     "start": "cd server && npm start",
     "postinstall": "npm run install:client && npm run install:server",
     "install:client": "cd client && npm install --include=dev",
-    "install:server": "cd server && npm install"
+    "install:server": "cd server && npm install",
+    "prepare": "husky install",
+    "format": "prettier --write **/*.{js,jsx,ts,tsx}",
+    "format:check": "prettier --check **/*.{js,jsx,ts,tsx}"
   },
   "repository": {
     "type": "git",
@@ -33,7 +36,8 @@
   },
   "homepage": "https://github.com/kristiania-pg6301-2022/pg6301-mob-programming#readme",
   "devDependencies": {
-    "concurrently": "^7.1.0"
+    "concurrently": "^7.1.0",
+    "husky": "^7.0.4"
   },
   "dependencies": {
     "@parcel/transformer-react-refresh-wrap": "^2.5.0",
