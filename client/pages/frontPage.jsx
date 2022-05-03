@@ -12,6 +12,9 @@ export function FrontPage() {
         <li>
           <Link to={"/movies/new"}>Add new movie</Link>
         </li>
+        <li>
+          <Link to={"/chat"}>Chat</Link>
+        </li>
       </ul>
     </div>
   );

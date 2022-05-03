@@ -19,6 +19,7 @@ export const LoginMoviesApiContext = React.createContext({
       throw new Error(`Failed to post ${res.status}: ${res.statusText}`);
     }
   },
+  userinfo: undefined,
 });
 
 export async function fetchJSON(url) {

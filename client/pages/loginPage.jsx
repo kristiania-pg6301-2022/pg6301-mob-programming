@@ -6,6 +6,7 @@ import { LoginButton } from "../components/LoginButton";
 export function LoginCallback({ reload, config }) {
   const { provider } = useParams();
   console.log(useParams());
+  sessionStorage.setItem("provider", provider);
 
   const [error, setError] = useState();
   const navigate = useNavigate();

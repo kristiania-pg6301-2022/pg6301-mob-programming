@@ -64,6 +64,7 @@ export function LoginApi() {
       google: await googleConfig(),
       microsoft: await microsoftConfig(),
     };
+
     const response = { config, user: {} };
 
     const { google_access_token, microsoft_access_token } = req.signedCookies;

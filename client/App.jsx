@@ -1,6 +1,6 @@
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { FrontPage } from "./pages/frontPage";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import "./application.css";
 import { LoginPage } from "./pages/loginPage";
@@ -9,6 +9,7 @@ import { useLoader } from "./hooks&context/useLoader";
 import MovieLists from "./pages/movieLists";
 import AddNewMovie from "./pages/addNewMovie";
 import Profile from "./pages/profile";
+import ChatPage from "./pages/chatPage";
 
 function UserActions({ user }) {
   if (!user || Object.keys(user).length === 0) {
@@ -18,10 +19,8 @@ function UserActions({ user }) {
   return (
     <>
       <Link to={"/profile"}>
-        {user.google?.name ? `Profile for ${user.google.name}` : "Profile"}
-        {user.microsoft?.name
-          ? `Profile for ${user.microsoft.name}`
-          : "Profile"}
+        {user.google?.name ? `Profile for ${user.google.name}` : ""}
+        {user.microsoft?.name ? `Profile for ${user.microsoft.name}` : ""}
       </Link>
       <Link to={"/login/endsession"}>Log out</Link>
     </>
@@ -29,6 +28,7 @@ function UserActions({ user }) {
 }
 
 export function App() {
+  const provider = sessionStorage.getItem("provider");
   const { fetchLogin } = useContext(LoginMoviesApiContext);
   const { data, error, loading, reload } = useLoader(fetchLogin);
 
@@ -56,7 +56,14 @@ export function App() {
             path={"/login/*"}
             element={<LoginPage config={data.config} reload={reload} />}
           />
-          <Route path={"/profile"} element={<Profile user={data?.user} />} />
+          <Route
+            path={"/profile"}
+            element={<Profile user={data?.user[provider]} />}
+          />
+          <Route
+            path={"/chat"}
+            element={<ChatPage user={data?.user[provider]} />}
+          />
           <Route path={"*"} element={<h1>Not found</h1>} />
         </Routes>
       </main>
