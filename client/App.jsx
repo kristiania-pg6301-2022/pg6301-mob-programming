@@ -1,42 +1,65 @@
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { FrontPage } from "./pages/frontPage";
 import React, { useContext } from "react";
 
-import FrontPage from "./pages/frontPage";
-import ChatPage from "./pages/chatPage";
-import Profile from "./pages/profile";
+import "./application.css";
+import { LoginPage } from "./pages/loginPage";
+import { LoginMoviesApiContext } from "./hooks&context/LoginMoviesApiContext";
+import { useLoader } from "./hooks&context/useLoader";
 import MovieLists from "./pages/movieLists";
 import AddNewMovie from "./pages/addNewMovie";
-import Login from "./pages/login";
-import { DBLoginAPIContext } from "./hooks&context/DB&LoginAPIContext";
-import { useLoader } from "./hooks&context/useLoader";
+import Profile from "./pages/profile";
+
+function UserActions({ user }) {
+  if (!user || Object.keys(user).length === 0) {
+    return <Link to={"/login"}>Login</Link>;
+  }
+
+  return (
+    <>
+      <Link to={"/profile"}>
+        {user.google?.name ? `Profile for ${user.google.name}` : "Profile"}
+        {user.microsoft?.name
+          ? `Profile for ${user.microsoft.name}`
+          : "Profile"}
+      </Link>
+      <Link to={"/login/endsession"}>Log out</Link>
+    </>
+  );
+}
 
 export function App() {
-  const { fetchLogin } = useContext(DBLoginAPIContext);
+  const { fetchLogin } = useContext(LoginMoviesApiContext);
   const { data, error, loading, reload } = useLoader(fetchLogin);
-  console.log(data);
 
   if (error) {
     return <div>Error: {error.toString()}</div>;
   }
-
   if (loading) {
     return <div>Please wait...</div>;
   }
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path={"/"} element={<FrontPage />} />
-        <Route
-          path={"/login/*"}
-          element={<Login config={data.config} reload={reload} />}
-        />
-        <Route path={"/profile"} element={<Profile user={data?.user} />} />
-        <Route path={"/chat"} element={<ChatPage />} />
-        <Route path={"/movies/"} element={<MovieLists />} />
-        <Route path={"/movies/add"} element={<AddNewMovie />} />
-        <Route path={"*"} element={<h1>Not found</h1>} />
-      </Routes>
+      <header>
+        <Link to={"/"}>Front page</Link>
+        <Link to={"/movies"}>Movies</Link>
+        <div className="menu-divider" />
+        <UserActions user={data?.user} />
+      </header>
+      <main>
+        <Routes>
+          <Route path={"/"} element={<FrontPage />} />
+          <Route path={"/movies"} element={<MovieLists />} />
+          <Route path={"/movies/new"} element={<AddNewMovie />} />
+          <Route
+            path={"/login/*"}
+            element={<LoginPage config={data.config} reload={reload} />}
+          />
+          <Route path={"/profile"} element={<Profile user={data?.user} />} />
+          <Route path={"*"} element={<h1>Not found</h1>} />
+        </Routes>
+      </main>
     </BrowserRouter>
   );
 }

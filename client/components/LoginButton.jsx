@@ -1,10 +1,11 @@
 import randomString from "./randomString";
 import { sha256 } from "./sha256";
+import React from "react";
 
-export default function LoginButton({ config, provider, label }) {
+export function LoginButton({ config, label, provider }) {
   async function handleLogin() {
     const {
-      authorization_endPoint,
+      authorization_endpoint,
       response_type,
       scope,
       client_id,
@@ -24,15 +25,20 @@ export default function LoginButton({ config, provider, label }) {
     };
 
     if (code_challenge_method) {
+      const state = randomString(50);
+      window.sessionStorage.setItem("authorization_state", state);
       const code_verifier = randomString(50);
       window.sessionStorage.setItem("code_verifier", code_verifier);
       parameters.code_challenge_method = code_challenge_method;
-      parameters.code_challenge = sha256(code_verifier);
+      parameters.code_challenge = await sha256(code_verifier);
+      parameters.domain_hint = "egms.no";
     }
 
-    window.location.href =
-      authorization_endPoint + "?" + new URLSearchParams(parameters);
+    window.location.href = `${authorization_endpoint}?${new URLSearchParams(
+      parameters
+    )}`;
   }
+
   return (
     <div>
       <button onClick={handleLogin}>{label}</button>

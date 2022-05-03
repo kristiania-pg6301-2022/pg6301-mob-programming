@@ -1,17 +1,16 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import React from "react";
 
-export default function FrontPage() {
+export function FrontPage() {
   return (
     <div>
-      <h1>Welcome to the list of movies</h1>
-      <h2>To add a new movie or join the chat, you have to login</h2>
+      <h1>Movie Database</h1>
       <ul>
         <li>
           <Link to={"/movies"}>List movies</Link>
         </li>
         <li>
-          <Link to={"/login"}>Login</Link>
+          <Link to={"/movies/new"}>Add new movie</Link>
         </li>
       </ul>
     </div>

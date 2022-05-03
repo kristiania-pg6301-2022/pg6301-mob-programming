@@ -4,16 +4,25 @@ import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import bodyparser from "body-parser";
 import cookieParser from "cookie-parser";
-import loginApi from "./loginApi.js";
+import { LoginApi } from "./loginApi.js";
+import { MoviesApi } from "./moviesApi.js";
 
 dotenv.config();
 
 const app = express();
 app.use(bodyparser.json());
-
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-app.use("/api/login", loginApi());
+const mongoClient = new MongoClient(process.env.MONGODB_URL);
+mongoClient.connect().then(async () => {
+  console.log("Connected to mongodb");
+  app.use(
+    "/api/movies",
+    MoviesApi(mongoClient.db(process.env.ATLAS_DATABASE || "pg6301"))
+  );
+});
+
+app.use("/api/login", LoginApi());
 app.use(express.static("../client/dist/"));
 
 app.use((req, res, next) => {
